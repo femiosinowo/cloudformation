@@ -122,24 +122,52 @@
       },
       "Metadata": {
         "AWS::CloudFormation::Init": {
-          "config": {
+
+          "configSets": {
+            "InstallAndRun": [
+
+              "Install",
+              "Configure"
+            ]
+          },
+                    "Install": {
             "packages": {
               "yum": {
-                "httpd": [ ]
+                "puppet": [ ],
+                "httpd": [ ],
+                "vim": [ ]
               }
             },
-            "sources": {
-              "/var/www/html": "https://s3.amazonaws.com/engelke/public/webcontent.zip"
-            },
+
             "services": {
               "sysvinit": {
+                "puppet": {
+                  "enabled": "true",
+                  "ensureRunning": "true"
+                },
                 "httpd": {
                   "enabled": "true",
                   "ensureRunning": "true"
                 }
+
+              }
+            }
+          },
+          "Configure": {
+            "commands": {
+              "01_connect_puppet_server": {
+                "command": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "puppet config set server puppet.gcio.cloud --section agent"
+                    ]
+                  ]
+                }
               }
             }
           }
+         
         }
       }
     },
@@ -179,7 +207,7 @@
         "Fn::Join": [
           "",
           [
-            "IPs=>",
+            "IP=> http://",
             {
               "Fn::GetAtt": [
                 "NewServer",

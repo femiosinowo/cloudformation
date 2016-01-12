@@ -207,14 +207,18 @@
           "Install": {
             "packages": {
               "yum": {
-                 "httpd": [ ],
+                "puppet": [ ],
+                "httpd": [ ],
                 "vim": [ ]
               }
             },
 
             "services": {
               "sysvinit": {
- 
+                "puppet": {
+                  "enabled": "true",
+                  "ensureRunning": "true"
+                },
                 "httpd": {
                   "enabled": "true",
                   "ensureRunning": "true"
@@ -222,7 +226,21 @@
 
               }
             }
-          } 
+          },
+          "Configure": {
+            "commands": {
+              "01_connect_puppet_server": {
+                "command": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "puppet config set server puppet.gcio.cloud --section agent"
+                    ]
+                  ]
+                }
+              }
+            }
+          }
         },
         "AWS::CloudFormation::Designer": {
           "id": "f57c0ee3-7ea7-4800-9094-fa7a728805bd"
