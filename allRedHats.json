@@ -231,7 +231,7 @@
             "commands": {
               "01_connect_puppet_server": {
                 "command": {
-                  "Fn::Join": [
+                  "Fn::Join": [ 
                     "",
                     [
                       "puppet config set server puppet.gcio.cloud --section agent"
